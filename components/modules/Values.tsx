@@ -3,13 +3,15 @@ import SectionHeader from '../SectionHeader'
 export default function Values({ data }: { data: any }) {
   const items = data.values || []
   return (
-    <section className={data.bg || 'bg-neutral-50'}>
+    <section className={data.bg || 'bg-sun-400'}>
       <div className="container section">
-        <SectionHeader superTitle={data.superTitle} title={data.title} />
-        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="text-center">
+          <SectionHeader superTitle={data.superTitle} title={data.title} subtitle={data.subtitle} />
+        </div>
+        <ul>
           {items.map((v: any, i: number) => (
-            <li key={i} className="rounded-lg border border-neutral-200 bg-white p-4">
-              <div className="eyelash">{v.label}</div>
+            <li key={i} className="text-center">
+              <span className="font-medium flex">{v.label}</span>
               {v.description && <p className="mt-1 text-sm text-neutral-700">{v.description}</p>}
             </li>
           ))}

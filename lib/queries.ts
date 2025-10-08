@@ -19,7 +19,7 @@ export const homeQuery = `*[_type == "page" && slug.current == "home"][0]{
   }
 }`
 
-// For About
+// For About Page
 export const aboutQuery = `*[_type=="about"][0]{
   title,
   modules[]{
@@ -30,6 +30,8 @@ export const aboutQuery = `*[_type=="about"][0]{
       _type, kicker, title, body, invertOnDesktop, bg,
       image{ ..., asset-> { url, metadata{ dimensions } }, alt }
     },    
+    // body content
+    subtitle,
     // capabilities reuse
     features[],
     // values block
@@ -57,7 +59,7 @@ export const workQuery = `
   }
 }
 `
-
+// For Works Page
 export const workPageQuery = /* groq */ `
 {
   // 1) page modules (hero, featured, cta) from a "page" singleton with slug "work"
@@ -121,7 +123,7 @@ export const workPageQuery = /* groq */ `
 }
 `
 
-
+// For Case Studies
 export const projectBySlugQuery = `*[_type=="project" && slug.current==$slug][0]{
   _id, title, slug, brandTheme, snapshot[], challenge,
   "heroUrl": heroMedia.asset->url,
@@ -142,6 +144,7 @@ export const projectBySlugQuery = `*[_type=="project" && slug.current==$slug][0]
   testimonial
 }`
 
+// For Listing Blog Posts
 export const postsQuery = `
 *[_type in ["post","blogPost"] && defined(slug.current)] 
 | order(coalesce(publishedAt, _createdAt) desc) {
@@ -165,7 +168,7 @@ export const postsQuery = `
   }
 }
 `
-// For blog posts
+// For Single Blog Posts
 export const postBySlugQuery = `
 *[_type in ["post","blogPost"] && slug.current == $slug][0]{
   _id,

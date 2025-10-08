@@ -8,8 +8,8 @@ export default defineType({
   type: 'object',
   icon: ListIcon,
   fields: [
-    defineField({ name: 'superTitle', type: 'string', description: 'Optional eyelash' }),
     defineField({ name: 'title', type: 'string' }),
+    defineField({ name: 'subtitle', type: 'string', description: 'Optional content right below title' }),
     defineField({
       name: 'values',
       title: 'Values',

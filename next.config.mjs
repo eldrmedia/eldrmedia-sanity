@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    typedRoutes: true,
+    typedRoutes: false,
   },
   // Make sure Next transpiles ESM packages shipped by Sanity plugins
   transpilePackages: [

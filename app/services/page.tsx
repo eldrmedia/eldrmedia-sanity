@@ -21,7 +21,7 @@ export default function ServicesPage() {
           </p>
           <div className="mt-6 flex gap-3">
             <Link
-              href="/contact"
+              href="/about"
               className="inline-flex items-center rounded-md bg-sun-500 px-4 py-2 text-white hover:bg-sun-600 transition"
             >
               Start a conversation
@@ -89,7 +89,7 @@ export default function ServicesPage() {
               <li>• 60–90 min stakeholder readout with Q&A</li>
             </ul>
             <Link
-              href="/contact"
+              href="/about"
               className="mt-6 inline-flex rounded-md bg-neutral-900 text-white px-3 py-2 hover:bg-neutral-800 transition"
             >
               Request availability
@@ -111,7 +111,7 @@ export default function ServicesPage() {
               <li>• Engineering handoff: spec + Storybook-ready guidance</li>
             </ul>
             <Link
-              href="/contact"
+              href="/about"
               className="mt-6 inline-flex rounded-md bg-sun-500 text-white px-3 py-2 hover:bg-sun-600 transition"
             >
               Kick off a build
@@ -133,7 +133,7 @@ export default function ServicesPage() {
               <li>• Office hours / reviews / documentation updates</li>
             </ul>
             <Link
-              href="/contact"
+              href="/about"
               className="mt-6 inline-flex rounded-md border border-neutral-300 px-3 py-2 hover:bg-neutral-50 transition"
             >
               Discuss a retainer
@@ -306,7 +306,7 @@ export default function ServicesPage() {
           </p>
           <div className="mt-6">
             <Link
-              href="/contact"
+              href="/about"
               className="inline-flex items-center rounded-md bg-neutral-900 px-4 py-2 hover:bg-neutral-800 transition"
             >
               Start a conversation
