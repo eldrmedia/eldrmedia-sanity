@@ -19,6 +19,16 @@ export const siteSettingsQuery = `
 }
 `
 
+export const footerSettingsQuery = `
+*[_type == "siteSettings"][0]{
+  social{
+    linkedin,
+    github,
+    instagram
+  }
+}
+`
+
 export const homeQuery = `*[_type == "home"][0]{
   title,
   modules[]{
