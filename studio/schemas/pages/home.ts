@@ -1,6 +1,9 @@
 import { defineType } from 'sanity'
 export default defineType({
   name:'home', title:'Home', type:'document',
+  groups: [
+    {name: 'seo', title: 'SEO'},
+  ],  
   fields:[
     {name:'title', type:'string'},
     {name:'modules', type:'array', of:[

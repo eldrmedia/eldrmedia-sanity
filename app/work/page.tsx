@@ -1,10 +1,17 @@
 import { fetchQuery } from '@/lib/sanityClient'
 import { workPageQuery } from '@/lib/queries'
+import { buildMetadata } from '@/lib/seo'
 import { ProjectCard } from '@/components/Cards'
 import Image from 'next/image'
 
 // Tweak if you want ISR
 export const revalidate = 300
+
+export async function generateMetadata() {
+  const data = await fetchQuery<any>(workPageQuery)
+  const pageDoc = data?.page || {}
+  return buildMetadata(pageDoc, { path: '/work' })
+}
 
 export default async function WorkPage(){
   const data = await fetchQuery<any>(workPageQuery)

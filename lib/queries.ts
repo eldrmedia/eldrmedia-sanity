@@ -1,8 +1,29 @@
-export const siteSettingsQuery = `*[_type=="siteSettings"][0]{..., navigation->}`
+export const siteSettingsQuery = `
+*[_type == "siteSettings"][0]{
+  siteUrl,
+  defaultSeo{
+    title,
+    description,
+    ogImage{asset->{url}},
+    canonical,
+    noindex
+  },
+  navigation->{
+    title,
+    items[]{
+      label,
+      href,
+      children[]{label, href}
+    }
+  }
+}
+`
 
-export const homeQuery = `*[_type == "page" && slug.current == "home"][0]{
+export const homeQuery = `*[_type == "home"][0]{
   title,
   modules[]{
+    _type,
+    _key,
     ...,
     media{..., "url": asset->url},
     posts[]->{title, slug, excerpt, "coverUrl": cover.asset->url, category, author->{name, "imageUrl": image.asset->url}, publishedAt, readTime},
@@ -18,6 +39,7 @@ export const homeQuery = `*[_type == "page" && slug.current == "home"][0]{
     action
   }
 }`
+
 
 // For About Page
 export const aboutQuery = `*[_type=="about"][0]{
@@ -188,6 +210,18 @@ export const postBySlugQuery = `
       metadata{ lqip, dimensions{ width, height } }
     },
     alt
+  }
+}
+`
+
+// Return URL paths for dynamic routes used in the sitemap
+export const allSlugsQuery = `
+{
+  "projects": *[_type == "project" && defined(slug.current)]{
+    "path": "/case-study/" + slug.current
+  },
+  "posts": *[_type == "post" && defined(slug.current)]{
+    "path": "/blog/" + slug.current
   }
 }
 `

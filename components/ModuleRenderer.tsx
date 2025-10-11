@@ -1,4 +1,5 @@
-import React from 'react'
+// components/ModuleRenderer.tsx
+import React, { ComponentType } from 'react'
 import Hero from './modules/Hero'
 import Bento from './modules/Bento'
 import Capabilities from './modules/Capabilities'
@@ -13,27 +14,44 @@ import Governance from './modules/Governance'
 import Values from './modules/Values'
 import AboutSplit from './modules/AboutSplit'
 
-export default function ModuleRenderer({modules}:{modules:any[]}){
+type ModuleProps = { data: any }
+type Module = { _type?: string; _key?: string; _id?: string; disabled?: boolean } & Record<string, any>
+
+const REGISTRY: Record<string, ComponentType<ModuleProps>> = {
+  heroModule: Hero,
+  bentoModule: Bento,
+  capabilitiesModule: Capabilities,
+  testimonialModule: TestimonialBlock,
+  blogFeaturedModule: BlogFeatured,
+  ctaModule: CTAFull,
+  processModule: Process,
+  evidenceModule: Evidence,
+  solutionModule: Solution,
+  impactModule: Impact,
+  governanceModule: Governance,
+  valuesModule: Values,
+  aboutSplitModule: AboutSplit,
+}
+
+export default function ModuleRenderer({ modules }: { modules?: Module[] }) {
+  if (!Array.isArray(modules) || modules.length === 0) return null
+
   return (
     <>
-      {modules?.map((m:any, idx:number)=>{
-        switch(m._type){
-          case 'heroModule': return <Hero key={idx} data={m}/>
-          case 'bentoModule': return <Bento key={idx} data={m}/>
-          case 'capabilitiesModule': return <Capabilities key={idx} data={m}/>
-          case 'testimonialModule': return <TestimonialBlock key={idx} data={m}/>
-          case 'blogFeaturedModule': return <BlogFeatured key={idx} data={m}/>
-          case 'ctaModule': return <CTAFull key={idx} data={m}/>
-          case 'processModule': return <Process key={idx} data={m}/>
-          case 'evidenceModule': return <Evidence key={idx} data={m}/>
-          case 'solutionModule': return <Solution key={idx} data={m}/>
-          case 'impactModule': return <Impact key={idx} data={m}/>
-          case 'governanceModule': return <Governance key={idx} data={m}/>
-          case 'valuesModule': return <Values key={idx} data={m} />
-          case 'aboutSplitModule': return <AboutSplit key={idx} data={m} />
-          default: return null
-        }
-      })}
+      {modules
+        .filter(Boolean)
+        .map((m, i) => {
+          if (!m || m.disabled) return null
+          const Comp = REGISTRY[m._type ?? '']
+          if (!Comp) {
+            if (process.env.NODE_ENV !== 'production') {
+              console.warn(`ModuleRenderer: no renderer for type "${m?._type}"`, m)
+            }
+            return null
+          }
+          const key = m._key || m._id || `${m._type}-${i}`
+          return <Comp key={key} data={m} />
+        })}
     </>
   )
 }

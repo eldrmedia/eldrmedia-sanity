@@ -1,6 +1,13 @@
 // app/services/page.tsx
 import Link from "next/link"
 
+export const metadata = {
+  title: 'Services — ELDR MEDIA',
+  description: 'Design systems, accessibility, and product ops...',
+  openGraph: { type: 'website', url: '/services' },
+  alternates: { canonical: '/services' },
+}
+
 export default function ServicesPage() {
   return (
     <main className="min-h-screen">

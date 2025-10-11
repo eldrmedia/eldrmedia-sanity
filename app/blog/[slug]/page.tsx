@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { PortableText } from '@portabletext/react'
 import { fetchQuery } from '@/lib/sanityClient'
 import { postBySlugQuery } from '@/lib/queries'
+import { buildMetadata } from '@/lib/seo'
 import Cover from '@/components/Cover'
 
 type Post = {
@@ -15,6 +16,11 @@ type Post = {
   author?: { name?: string }
   publishedAt?: string
   readTime?: number
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const post = await fetchQuery<any>(postBySlugQuery, { slug: params.slug })
+  return buildMetadata(post, { path: `/blog/${params.slug}` })
 }
 
 export default async function PostPage({ params }: { params: { slug: string } }) {
@@ -44,7 +50,7 @@ export default async function PostPage({ params }: { params: { slug: string } })
       )}
 
       {/* Body */}
-      <div className="prose max-w-none mt-10">
+      <div className="w-1/2 mx-auto mt-10">
         <PortableText value={body} />
       </div>
     </article>

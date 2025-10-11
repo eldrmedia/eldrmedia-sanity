@@ -1,5 +1,6 @@
 import SectionHeader from '../SectionHeader'
-import InlineSvg from '@/components/InlineSvg' // or InlineSvgUnsafe
+import dynamic from 'next/dynamic'
+const InlineSvg = dynamic(() => import('@/components/InlineSvg'), { ssr: false })
 import clsx from 'clsx'
 
 export default function Capabilities({ data }: { data: any }) {

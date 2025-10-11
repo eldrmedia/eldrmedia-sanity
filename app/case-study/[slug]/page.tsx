@@ -2,6 +2,14 @@ import { fetchQuery } from '@/lib/sanityClient'
 import { projectBySlugQuery } from '@/lib/queries'
 import ModuleRenderer from '@/components/ModuleRenderer'
 import ThemeVars from '@/components/ThemeVars'
+import { buildMetadata } from '@/lib/seo'
+
+type Params = { params: { slug: string } }
+
+export async function generateMetadata({ params }: Params) {
+  const data = await fetchQuery<any>(projectBySlugQuery, { slug: params.slug })
+  return buildMetadata(data, { path: `/case/${params.slug}` })
+}
 
 export default async function CasePage({params}:{params:{slug:string}}){
   const data = await fetchQuery<any>(projectBySlugQuery, {slug: params.slug})

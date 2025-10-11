@@ -16,6 +16,7 @@ import snapshotItem from './objects/snapshotItem'
 import phase from './objects/phase'
 import aboutSplitModule from './objects/aboutSplitModule'
 import blockContent from './objects/blockContent'
+import seo from './objects/seo'
 
 import heroModule from './modules/heroModule'
 import bentoModule from './modules/bentoModule'
@@ -32,7 +33,7 @@ import valuesModule from './modules/valuesModule'
 
 export const schemaTypes = [
   siteSettings, navigation, page, home, about, post, project,
-  testimonial, cta, colorTheme, feature, kpi, milestone, snapshotItem, phase, aboutSplitModule, blockContent,
+  testimonial, cta, colorTheme, feature, kpi, milestone, snapshotItem, phase, aboutSplitModule, blockContent, seo,
   heroModule, bentoModule, capabilitiesModule, testimonialModule, blogFeaturedModule,
   processModule, evidenceModule, solutionModule, impactModule, governanceModule, ctaModule, valuesModule
 ]

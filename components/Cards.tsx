@@ -67,7 +67,7 @@ export function ProjectCard({
   tags,
   variant = 'default',
   className,
-  hrefBase = '/case', // change to '/work' if you prefer
+  hrefBase = '/case-study', // change to '/work' if you prefer
 }: {
   title: string
   slug: { current: string }
