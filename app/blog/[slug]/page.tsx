@@ -10,6 +10,17 @@ import Image from 'next/image'
 // Optional: tune freshness for posts page
 export const revalidate = 300
 
+type RelatedPost = {
+  _id: string
+  title: string
+  slug: { current: string }
+  excerpt?: string
+  cover?: { alt?: string; asset?: { url?: string } }
+  publishedAt?: string
+  readTime?: number
+  tags?: string[]
+}
+
 type Post = {
   _id: string
   title: string

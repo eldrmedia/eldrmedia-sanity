@@ -42,9 +42,7 @@ export default function AboutSplit({ data }: { data: AboutSplitData }) {
             {body && (
               <Portable
                 value={body}
-                variant="section"       /* uses shared defaults */
                 className="prose max-w-none mt-4"
-                overrides={overrides}   /* optional per-instance tweaks */
               />
             )}
           </div>
