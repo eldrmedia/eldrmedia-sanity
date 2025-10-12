@@ -201,28 +201,39 @@ export const postsQuery = `
 }
 `
 // For Single Blog Posts
-export const postBySlugQuery = `
-*[_type in ["post","blogPost"] && slug.current == $slug][0]{
+export const postBySlugQuery = /* groq */ `
+*[_type == "post" && slug.current == $slug][0]{
   _id,
   title,
   slug,
   excerpt,
   category,
-  author->{ name, "imageUrl": image.asset->url },
+  tags,
   publishedAt,
   readTime,
+  cover{ alt, asset->{ url } },
+  author{ name, image{ asset->{ url } } },
   body,
-  cover{
-    ...,
-    asset->{
-      _id,
-      url,
-      metadata{ lqip, dimensions{ width, height } }
+
+  // Manual related (if present), otherwise auto by tags
+  "related": coalesce(
+    relatedManual[]->{
+      _id, title, slug, excerpt,
+      cover{ alt, asset->{ url } },
+      publishedAt, readTime, tags
     },
-    alt
-  }
+    // Auto: any overlap in tags (strings), newest first, limit 3
+    *[_type == "post" && slug.current != $slug
+      && count(tags[@ in ^.tags]) > 0
+    ] | order(publishedAt desc) [0...3]{
+      _id, title, slug, excerpt,
+      cover{ alt, asset->{ url } },
+      publishedAt, readTime, tags
+    }
+  )
 }
 `
+
 
 // Return URL paths for dynamic routes used in the sitemap
 export const allSlugsQuery = `

@@ -18,7 +18,7 @@ export default async function Footer() {
     <footer className="bg-neutral-900 text-neutral-400 py-12">
       <div className="container mx-auto px-4 flex flex-col items-center text-center space-y-8">
         <div className="font-heading text-2xl tracking-widest text-white">ELDR MEDIA</div>
-        <hr className="w-full max-w-4xl border-neutral-700" />
+        <hr className="w-full border-neutral-700" />
 
         {links.length > 0 && (
           <div className="flex gap-6">

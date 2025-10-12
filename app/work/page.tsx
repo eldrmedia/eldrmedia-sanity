@@ -4,8 +4,7 @@ import { buildMetadata } from '@/lib/seo'
 import { ProjectCard } from '@/components/Cards'
 import Image from 'next/image'
 
-// Tweak if you want ISR
-export const revalidate = 300
+export const revalidate = 60
 
 export async function generateMetadata() {
   const data = await fetchQuery<any>(workPageQuery)

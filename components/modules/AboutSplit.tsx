@@ -1,6 +1,7 @@
+// components/modules/AboutSplit.tsx
 import Image from 'next/image'
-import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import clsx from 'clsx'
+import Portable from '@/components/Portable'
 
 type AboutSplitData = {
   kicker?: string
@@ -9,6 +10,7 @@ type AboutSplitData = {
   invertOnDesktop?: boolean
   bg?: string
   image?: { alt?: string; asset?: { url?: string } }
+  /** Optional per-instance tweaks that *add* classes on top of the defaults */
   bodyHeadingClasses?: { h1?: string; h2?: string; h3?: string; p?: string }
 }
 
@@ -16,35 +18,17 @@ export default function AboutSplit({ data }: { data: AboutSplitData }) {
   const { kicker, title, body, image, invertOnDesktop, bg, bodyHeadingClasses } = data || {}
   const invertClass = invertOnDesktop ? 'md:[&>div:first-child]:order-2' : ''
 
-  const components: PortableTextComponents = {
-    block: {
-      h1: ({ children }) => (
-        <h1 className={clsx('h1', bodyHeadingClasses?.h1)}>
-          {children}
-        </h1>
-      ),
-      h2: ({ children }) => (
-        <h2 className={clsx('h2', bodyHeadingClasses?.h2)}>
-          {children}
-        </h2>
-      ),
-      h3: ({ children }) => (
-        <h3 className={clsx('h3', bodyHeadingClasses?.h3)}>
-          {children}
-        </h3>
-      ),
-      normal: ({ children }) => (
-        <p className={clsx('leading-7', bodyHeadingClasses?.p)}>{children}</p>
-      ),
-      blockquote: ({ children }) => (
-        <blockquote className="border-l-4 pl-4 italic text-neutral-700">{children}</blockquote>
-      ),
-    },
-    list: {
-      bullet: ({ children }) => <ul className="list-disc pl-6 space-y-2">{children}</ul>,
-      number: ({ children }) => <ol className="list-decimal pl-6 space-y-2">{children}</ol>,
-    },
-  }
+  // If you pass bodyHeadingClasses, we layer them via Portable.overrides
+  const overrides = bodyHeadingClasses
+    ? {
+        block: {
+          h1: ({ children }: any) => <h1 className={clsx('display', bodyHeadingClasses.h1)}>{children}</h1>,
+          h2: ({ children }: any) => <h2 className={clsx('h2', bodyHeadingClasses.h2)}>{children}</h2>,
+          h3: ({ children }: any) => <h3 className={clsx('h3', bodyHeadingClasses.h3)}>{children}</h3>,
+          normal: ({ children }: any) => <p className={clsx('leading-7', bodyHeadingClasses.p)}>{children}</p>,
+        },
+      }
+    : undefined
 
   return (
     <section className="section" style={bg ? { background: bg } : {}}>
@@ -54,10 +38,14 @@ export default function AboutSplit({ data }: { data: AboutSplitData }) {
           <div className="md:col-span-3">
             {kicker && <div className="kicker">{kicker}</div>}
             {title && <h2 className="h2 mt-2">{title}</h2>}
+
             {body && (
-              <div className="prose max-w-none mt-4">
-                <PortableText value={body} components={components} />
-              </div>
+              <Portable
+                value={body}
+                variant="section"       /* uses shared defaults */
+                className="prose max-w-none mt-4"
+                overrides={overrides}   /* optional per-instance tweaks */
+              />
             )}
           </div>
 
