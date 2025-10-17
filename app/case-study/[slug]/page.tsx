@@ -3,8 +3,9 @@ import { projectBySlugQuery } from '@/lib/queries'
 import ModuleRenderer from '@/components/ModuleRenderer'
 import ThemeVars from '@/components/ThemeVars'
 import { buildMetadata } from '@/lib/seo'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
-type Params = { params: { slug: string } }
+type Params = { params: { slug: string, title: string } }
 
 export async function generateMetadata({ params }: Params) {
   const data = await fetchQuery<any>(projectBySlugQuery, { slug: params.slug })
@@ -13,8 +14,20 @@ export async function generateMetadata({ params }: Params) {
 
 export default async function CasePage({params}:{params:{slug:string}}){
   const data = await fetchQuery<any>(projectBySlugQuery, {slug: params.slug})
+  if (!data) return notFound()
+
+  const projectTitle = data.title as string | undefined
   return (
     <div>
+      <Breadcrumbs
+        align="left"
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Work', href: '/work' },       // ← was "Blog"
+          { label: projectTitle ?? 'Case study' } // ← use fetched title safely
+        ]}
+      />
+
       <ThemeVars theme={data?.brandTheme}/>
       <section className="container section">
         <div className="grid lg:grid-cols-12 gap-10 items-start">

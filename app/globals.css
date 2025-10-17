@@ -21,7 +21,7 @@ p {@apply text-base sm:text-lg leading-relaxed text-neutral-800 mt-4 mb-6}
 
 html, body { @apply font-body bg-white;}
 h1, h2, h3, .heading { @apply font-heading; }
-
+.outline-link {@apply focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sun-300}
 /* Eyelash / eyebrow utility */
 .eyelash {
   @apply font-eyelash uppercase tracking-[0.2em] text-[11px];

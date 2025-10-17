@@ -3,6 +3,7 @@ import { workPageQuery } from '@/lib/queries'
 import { buildMetadata } from '@/lib/seo'
 import { ProjectCard } from '@/components/Cards'
 import Image from 'next/image'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 export const revalidate = 60
 
@@ -22,33 +23,36 @@ export default async function WorkPage(){
   const cta = page?.modules?.find((m: any) => m._type === 'ctaModule')
 
   return (
-    <div className="container section space-y-16">
+    <>
+      <Breadcrumbs align="left" items={[{ label: 'Home', href: '/' }, { label: 'Work' }]} />
+      <div className="container section space-y-16">
 
-      {/* 1) HERO */}
-      {hero && <HeroModule data={hero} />}
+        {/* 1) HERO */}
+        {hero && <HeroModule data={hero} />}
 
-      {/* 2) MAIN GRID OF ALL WORK */}
-      <section>
-        <header className="mb-10">
-          <div className="kicker">Selected Works</div>
-          <h1 className="h1 mt-2">
-            A mix of design-system builds, government projects, and platform redesigns.
-          </h1>
-        </header>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((p: any) => (
-            <ProjectCard key={p.slug.current} {...p} />
-          ))}
-        </div>
-      </section>
+        {/* 2) MAIN GRID OF ALL WORK */}
+        <section>
+          <header className="mb-10">
+            <div className="kicker">Selected Works</div>
+            <h1 className="h1 mt-2">
+              A mix of design-system builds, government projects, and platform redesigns.
+            </h1>
+          </header>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projects.map((p: any) => (
+              <ProjectCard key={p.slug.current} {...p} />
+            ))}
+          </div>
+        </section>
 
-      {/* 3) FEATURED WORK MODULE */}
-      {featured && <FeaturedWorkModule data={featured} />}
+        {/* 3) FEATURED WORK MODULE */}
+        {featured && <FeaturedWorkModule data={featured} />}
 
-      {/* 4) CTA */}
-      {cta && <CtaModule data={cta} />}
+        {/* 4) CTA */}
+        {cta && <CtaModule data={cta} />}
 
-    </div>
+      </div>
+    </>
   )
 }
 

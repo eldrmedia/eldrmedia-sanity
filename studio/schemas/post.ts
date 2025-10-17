@@ -21,7 +21,13 @@ export default defineType({
       options: { layout: 'tags' }, // gives a tag UI in Studio
     }),
 
-    defineField({ name:'category', type:'string' }),
+    defineField({
+      name: 'category',
+      type: 'string',
+      options: {
+        list: ['Design Leadership', 'Systems & Strategy', 'Process & Practice', 'Career & Growth', 'Human-Centered Design & AI', 'Case Studies']
+      }
+    }),
 
     defineField({
       name:'author',

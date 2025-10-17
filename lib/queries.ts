@@ -1,3 +1,5 @@
+// lib/queries.ts
+
 export const siteSettingsQuery = `
 *[_type == "siteSettings"][0]{
   siteUrl,
@@ -91,6 +93,8 @@ export const workQuery = `
   }
 }
 `
+
+
 // For Works Page
 export const workPageQuery = /* groq */ `
 {
@@ -155,6 +159,7 @@ export const workPageQuery = /* groq */ `
 }
 `
 
+
 // For Case Studies
 export const projectBySlugQuery = `*[_type=="project" && slug.current==$slug][0]{
   _id, title, slug, brandTheme, snapshot[], challenge,
@@ -176,61 +181,48 @@ export const projectBySlugQuery = `*[_type=="project" && slug.current==$slug][0]
   testimonial
 }`
 
+
 // For Listing Blog Posts
 export const postsQuery = `
-*[_type in ["post","blogPost"] && defined(slug.current)] 
+*[_type in ["post","blogPost"]
+  && defined(slug.current)
+  && coalesce(publishedAt, _createdAt) <= now() ]     // ⬅️ hide future posts
 | order(coalesce(publishedAt, _createdAt) desc) {
-  _id,
-  title,
-  slug,
-  excerpt,
+  _id, title, slug, excerpt,
   "coverUrl": coalesce(cover.asset->url, mainImage.asset->url, image.asset->url),
   category,
   author->{ name, "imageUrl": image.asset->url },
   publishedAt,
   readTime,
-    cover{
+  cover{
     ...,
-    asset->{
-      _id,
-      url,
-      metadata{ lqip, dimensions{ width, height } }
-    },
+    asset->{ _id, url, metadata{ lqip, dimensions{ width, height } } },
     alt
   }
 }
 `
-// For Single Blog Posts
-export const postBySlugQuery = /* groq */ `
-*[_type == "post" && slug.current == $slug][0]{
-  _id,
-  title,
-  slug,
-  excerpt,
-  category,
-  tags,
-  publishedAt,
-  readTime,
-  cover{ alt, asset->{ url } },
+
+
+// For Single Blog Posts (with Related by tag, max 3)
+export const postBySlugQuery = `
+*[_type == "post"
+  && slug.current == $slug
+  && coalesce(publishedAt, _createdAt) <= now()][0]{   // ⬅️ block future detail views
+  _id, title, slug, excerpt, category, publishedAt, readTime, tags,
+  cover{ alt, asset->{ url, metadata{ lqip, dimensions } } },
   author{ name, image{ asset->{ url } } },
   body,
 
-  // Manual related (if present), otherwise auto by tags
-  "related": coalesce(
-    relatedManual[]->{
-      _id, title, slug, excerpt,
-      cover{ alt, asset->{ url } },
-      publishedAt, readTime, tags
-    },
-    // Auto: any overlap in tags (strings), newest first, limit 3
-    *[_type == "post" && slug.current != $slug
-      && count(tags[@ in ^.tags]) > 0
-    ] | order(publishedAt desc) [0...3]{
-      _id, title, slug, excerpt,
-      cover{ alt, asset->{ url } },
-      publishedAt, readTime, tags
-    }
-  )
+  "related": *[
+    _type == "post"
+    && _id != ^._id
+    && coalesce(publishedAt, _createdAt) <= now()      // ⬅️ no future posts in related
+    && count(coalesce(tags, [])[@ in coalesce(^.tags, [])]) > 0
+  ] | order(coalesce(publishedAt, _createdAt) desc)[0...3]{
+    _id, title, slug, excerpt,
+    cover{ alt, asset->{ url, metadata{ lqip, dimensions } } },
+    readTime, tags
+  }
 }
 `
 
@@ -241,8 +233,65 @@ export const allSlugsQuery = `
   "projects": *[_type == "project" && defined(slug.current)]{
     "path": "/case-study/" + slug.current
   },
-  "posts": *[_type == "post" && defined(slug.current)]{
+  "posts": *[_type == "post" && defined(slug.current)
+    && coalesce(publishedAt, _createdAt) <= now()]{
     "path": "/blog/" + slug.current
+  }
+}
+`
+
+
+// Fetch the featured posts chosen on the "Blog" page (slug: blog)
+export const blogPageFeaturedQuery = `
+*[_type == "page" && slug.current == "blog"][0]{
+  "featured": modules[_type == "blogFeaturedModule"][0].posts[]->{
+    _id,
+    title,
+    slug,
+    excerpt,
+    category,
+    tags,
+    readTime,
+    publishedAt,
+    author->{ name, "imageUrl": image.asset->url },
+    cover{
+      alt,
+      asset->{ url, metadata{ lqip, dimensions } }
+    }
+  }
+}
+`
+
+// Unique categories (published only)
+export const categoriesQuery = `
+array::unique(
+  *[_type == "post" && defined(category) && coalesce(publishedAt, _createdAt) <= now()]
+  .category
+)
+`
+
+// Posts list, optional category filter, exclude featured IDs, published only
+export const postsByCategoryQuery = `
+*[
+  _type == "post" &&
+  defined(slug.current) &&
+  coalesce(publishedAt, _createdAt) <= now() &&
+  (!defined($category) || category == $category) &&
+  !(_id in $excludeIds)
+]
+| order(coalesce(publishedAt, _createdAt) desc) {
+  _id,
+  title,
+  slug,
+  excerpt,
+  category,
+  tags,
+  readTime,
+  publishedAt,
+  author->{ name, "imageUrl": image.asset->url },
+  cover{
+    alt,
+    asset->{ url, metadata{ lqip, dimensions } }
   }
 }
 `
